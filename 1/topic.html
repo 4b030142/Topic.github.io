@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5G巡檢車</title>
+ 
+</head>
+<body>
+
+    <header>
+    <h1>5G 社區遠距行動監控載具系統-運用於病媒蚊密度檢測 </h1>
+    
+    </header>
+
+    <div class="parent_block">
+        <section class="video_sec">
+          <div class="btn_parent">
+            <button type="button" id="open_webcam">開啟 webcam</button>
+            <button type="button" id="close_webcam">關閉 webcam</button>
+          </div>
+          
+          <video id="my_video" poster="https://alldata.sgp1.digitaloceanspaces.com/images%2Fwebcam_hint.png" playsinline autoplay muted></video>
+        </section>
+  
+      
+      </div>
+      <h4>溫度：XX</h4>
+      <h4>溫度：XX</h4>
+      
+      
+      <script>
+        "use strict";
+  
+        const video_el = document.getElementById("my_video");
+        const canvas_el = document.getElementById("my_canvas");
+        var stream_obj; // 預計用來存放 串流相關的物件(MediaStream)
+  
+        // 開啟 webcam
+        const open_webcam_el = document.getElementById("open_webcam");
+        open_webcam_el.addEventListener("click", function(){
+          
+          // 開啟視訊鏡頭，瀏覽器會跳詢問視窗
+          navigator.mediaDevices.getUserMedia({video: true}).then(function(stream){
+            stream_obj = stream;         // 將串流物件放在 stream_obj 全域變數，方便後面關閉 webcam 時會用到
+            video_el.srcObject = stream; // video 標籤顯示 webcam 畫面
+          }).catch(function(error){      // 若無法取得畫面，執行 catch
+            console.log('navigator.MediaDevices.getUserMedia Error: ', error.message, error.name);
+          });
+  
+        });
+  
+        // 關閉 webcam
+        const close_webcam_el = document.getElementById("close_webcam");
+        close_webcam_el.addEventListener("click", function(){
+          // console.log(stream.getTracks());
+          // 將所有的 MediaStreamTrack 都關閉
+          stream_obj.getTracks().forEach(function(track) {
+            track.stop();
+          });
+  
+          stream_obj = undefined;    // 回到該變數原來預設(即 undefined)
+          video_el.srcObject = null; // 將 video 標籤上的 srcObject 清空
+        });
+      </script>
+</body>
+</html>
